@@ -12,6 +12,10 @@ topic = "python/mqtt"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'emqx'
 password = 'public'
+latitude = "-12.205"
+longitude = "-38.905"
+coordinates = f"{latitude}/{longitude}"
+
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -28,10 +32,11 @@ def connect_mqtt():
 
 
 def publish(client):
-    msg_count = 0
+    client.publish(f"station/map/{client_id}",coordinates)
     while True:
-        time.sleep(1)
-        msg = f"messages: {msg_count}"
+        time.sleep(10)
+        topic = f"station/queue/{client_id}"
+        msg = random.randint(0,10)
         result = client.publish(topic, msg)
         # result: [0, 1]
         status = result[0]
@@ -39,13 +44,14 @@ def publish(client):
             print(f"Send `{msg}` to topic `{topic}`")
         else:
             print(f"Failed to send message to topic {topic}")
-        msg_count += 1
+
 
 
 def run():
     client = connect_mqtt()
     client.loop_start()
     publish(client)
+
 
 
 if __name__ == '__main__':
