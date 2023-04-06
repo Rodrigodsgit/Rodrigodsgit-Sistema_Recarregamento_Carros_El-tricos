@@ -3,6 +3,7 @@ import random
 import time
 
 from paho.mqtt import client as mqtt_client
+from decimal import Decimal
 
 
 broker = 'broker.emqx.io'
@@ -12,7 +13,6 @@ username = 'emqx'
 password = 'public'
 latitude = 0
 longitude = 0
-coordinates = f"{latitude}/{longitude}"
 
 
 def connect_mqtt():
@@ -29,7 +29,7 @@ def connect_mqtt():
     return client
 
 
-def publish(client):
+def publish(client, coordinates):
     client.publish(f"station/map/{client_id}",coordinates)
     while True:
         time.sleep(10)
@@ -45,11 +45,11 @@ def publish(client):
 
 def menu():
     while True:
-        latitude = float(input("Enter your latitude coordinate: "))  
-        longitude = float(input("Enter your longitude coordinate: "))
+        latitude = Decimal(input("Enter your latitude coordinate: "))  
+        longitude = Decimal(input("Enter your longi80tude coordinate: "))
         if (-12.205 >= latitude >= -12.285) and (-38.905 >= longitude >= -38.990):
             print("Established geographical area")
-            break
+            return f"{latitude}/{longitude}"
         else:
             print("Out of area")
 
@@ -57,10 +57,10 @@ def menu():
 
 
 def run():
-    menu()
+    coordinates = menu()
     client = connect_mqtt()
     client.loop_start()
-    publish(client)
+    publish(client, coordinates)
 
 
 
