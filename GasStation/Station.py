@@ -7,13 +7,11 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "python/mqtt"
-# generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 username = 'emqx'
 password = 'public'
-latitude = "-12.205"
-longitude = "-38.905"
+latitude = 0
+longitude = 0
 coordinates = f"{latitude}/{longitude}"
 
 
@@ -38,7 +36,6 @@ def publish(client):
         topic = f"station/queue/{client_id}"
         msg = random.randint(0,10)
         result = client.publish(topic, msg)
-        # result: [0, 1]
         status = result[0]
         if status == 0:
             print(f"Send `{msg}` to topic `{topic}`")
@@ -46,8 +43,21 @@ def publish(client):
             print(f"Failed to send message to topic {topic}")
 
 
+def menu():
+    while True:
+        latitude = float(input("Enter your latitude coordinate: "))  
+        longitude = float(input("Enter your longitude coordinate: "))
+        if (-12.205 >= latitude >= -12.285) and (-38.905 >= longitude >= -38.990):
+            print("Established geographical area")
+            break
+        else:
+            print("Out of area")
+
+
+
 
 def run():
+    menu()
     client = connect_mqtt()
     client.loop_start()
     publish(client)
