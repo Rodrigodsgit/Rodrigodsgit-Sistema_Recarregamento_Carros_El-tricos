@@ -3,16 +3,14 @@ import random
 import time
 
 from paho.mqtt import client as mqtt_client
-from decimal import Decimal
+
 
 
 broker = 'broker.emqx.io'
 port = 1883
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
+client_id = f'station-{random.randint(0, 1000)}'
 username = 'emqx'
 password = 'public'
-latitude = 0
-longitude = 0
 
 
 def connect_mqtt():
@@ -45,8 +43,8 @@ def publish(client, coordinates):
 
 def menu():
     while True:
-        latitude = Decimal(input("Enter your latitude coordinate: "))  
-        longitude = Decimal(input("Enter your longi80tude coordinate: "))
+        latitude = float(-12.220)  #Decimal(input("Enter your latitude coordinate: "))  
+        longitude = float(-38.930)  #Decimal(input("Enter your longi80tude coordinate: "))
         if (-12.205 >= latitude >= -12.285) and (-38.905 >= longitude >= -38.990):
             print("Established geographical area")
             return f"{latitude}/{longitude}"
