@@ -1,4 +1,5 @@
 import random
+import json
 
 from paho.mqtt import client as mqtt_client
 from flask import Flask
@@ -47,7 +48,7 @@ def msg_decode(msg):
         if result == None:
             latitude = float(coordinates[0])
             longitude = float(coordinates[1])
-            data[topic[2]] = [latitude, longitude, ""]
+            data[topic[2]] = [latitude, longitude, 0]
         else:
             result[0] = round(coordinates[0],3)
             result[1] =round(coordinates[1],3)
@@ -56,7 +57,7 @@ def msg_decode(msg):
         if result != None:
             result[2] = msg.payload.decode()
         else:
-            data[topic[2]] = ["","", msg.payload.decode()]
+            data[topic[2]] = [0,0, msg.payload.decode()]
     
     print(data)
 
@@ -71,15 +72,30 @@ app = Flask(__name__)
 
 @app.route('/lessQueue', methods=['GET'])
 def less_queue():
-    # bestStation = 0
+    bestStationTime = None
+    coord1 = (latitude, longitude)
+    km_hr = 60
+    recharge = 25
+    result = {}
 
-    # for id, info in data:
-    #     coord1 = (latitude, longitude)
-    #     coord2 = (info[0], -38.990)
+    for id, info in data.items():    
 
-    #     dist = geodesic(coord1, coord2).km
-    #     dist = round(dist,2)
-    return "Teste"
+        coord2 = (info[0], info[1])
+        dist = geodesic(coord1, coord2).km
+        dist = round(dist,2)
+        timeDist = round(dist/km_hr,2)
+        timeRecharge = round(float(info[2]) * recharge,2)
+        totalTime = timeDist + timeRecharge
+
+        if bestStationTime == None:
+            bestStationTime = [id, totalTime, dist, info[2]]
+        else:
+            if bestStationTime[1] > totalTime:
+                bestStationTime = [id, totalTime, dist, info[2]]
+        
+    result[bestStationTime[0]] = bestStationTime[1:]
+    result = json.dumps(result)
+    return result
 
 if __name__ == '__main__':
     t1 = threading.Thread(target=run)
