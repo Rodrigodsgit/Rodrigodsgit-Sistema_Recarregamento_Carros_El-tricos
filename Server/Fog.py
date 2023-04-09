@@ -3,6 +3,7 @@ import random
 from paho.mqtt import client as mqtt_client
 from flask import Flask
 from geopy.distance import geodesic
+import threading
 
 broker = 'broker.emqx.io'
 port = 1883
@@ -66,20 +67,28 @@ def run():
     client.loop_forever()
 
 
-if __name__ == '__main__':
-    run()
-
-
 app = Flask(__name__)
 
 @app.route('/lessQueue', methods=['GET'])
 def less_queue():
-    bestStation = 0
+    # bestStation = 0
 
-    for id, info in data:
-        coord1 = (latitude, longitude)
-        coord2 = (info[0], -38.990)
+    # for id, info in data:
+    #     coord1 = (latitude, longitude)
+    #     coord2 = (info[0], -38.990)
 
-        dist = geodesic(coord1, coord2).km
-        dist = round(dist,2)
+    #     dist = geodesic(coord1, coord2).km
+    #     dist = round(dist,2)
+    return "Teste"
 
+if __name__ == '__main__':
+    t1 = threading.Thread(target=run)
+    t2 = threading.Thread(target=app.run)
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+
+    
