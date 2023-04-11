@@ -8,6 +8,7 @@ import time
 app = Flask(__name__)
 ip = "localhost"
 port = 5000
+alert = False
 car = Car(random.uniform(-12.285, -12.205), random.uniform(-38.990, -38.905))
 car.upBatteryConsumption()
 
@@ -17,14 +18,14 @@ def consumeBattery(car : Car):
         car.consumeBattery()
 
 #a terminar
-def alert():
-    time.sleep(3)
+def infoAlert():
     print("Bateria baixa")
 
-def avaliableBattery(car : Car):
+def avaliableBattery(car : Car.Car):
     while (True):
-        if car.battery < 30:
-            alert()
+        if car.isLowBattery() and not alert:
+            alert = True
+            infoAlert()
 
 def printCarBattery(car : Car):
     while (True):

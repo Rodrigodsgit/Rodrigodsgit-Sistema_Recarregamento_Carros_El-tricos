@@ -47,6 +47,11 @@ class Car:
     def resetBattery(self):
         self.battery = 100
 
+    def isLowBattery(self) -> bool:
+        if self.battery <= 20:
+            return True
+        return False
+
 def printCar(car):
     print("-" * 20)
     print(f"Bateria: {testCar.battery}")
