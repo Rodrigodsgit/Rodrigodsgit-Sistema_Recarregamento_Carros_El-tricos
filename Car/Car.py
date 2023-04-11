@@ -20,6 +20,9 @@ class Car:
         self.setLatitude(coordinates[0])
         self.setLongitude(coordinates[1])
 
+    def getCoordinates(self):
+        return (self.latitude, self.longitude)
+
     def getBatteryConsumption(self):
         if self.batteryConsumption == 0:
             return "off"
