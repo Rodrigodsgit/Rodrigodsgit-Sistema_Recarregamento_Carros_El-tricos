@@ -42,7 +42,8 @@ def infoAlert():
     if 200 <= response.status_code < 300:
         idStation, station = response.json().popitem()
         print(f"Bateria baixa")
-        print(f"Va para o posto {idStation}")
+        print(f"Va para o posto {idStation} a {station[1]}")
+        print(f"tem {station[2]} carros nesse posto com um tempo gasto de {station[0]}")
     else:
         print(f"Erro {response.status_code} ao se conectar ao servidor {nearestStation[0]}:{nearestStation[1]}")
 

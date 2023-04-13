@@ -3,8 +3,7 @@
 class Car:
     battery = 100
     batteryConsumption = 0
-    #latitude = 0
-    #longitude = 0
+    velocity = 0
     
     def __init__(self, latitude, longitude):
         self.latitude = latitude
@@ -55,6 +54,7 @@ class Car:
             return True
         return False
 
+    
 def printCar(car):
     print("-" * 20)
     print(f"Bateria: {testCar.battery}")
