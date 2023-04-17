@@ -1,10 +1,11 @@
 import random
 import json
+import threading
 
 from paho.mqtt import client as mqtt_client
 from flask import Flask, request
 from geopy.distance import geodesic
-import threading
+
 
 broker = 'broker.emqx.io'
 port = 1883
