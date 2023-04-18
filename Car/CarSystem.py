@@ -1,10 +1,14 @@
 import random
-from geopy.distance import geodesic
 import json
-from flask import Flask, request
 import threading
-from Car import Car
 import time
+
+from Car import Car
+
+from geopy.distance import geodesic
+from flask import Flask, request
+
+
 
 app = Flask(__name__)
 alert = False

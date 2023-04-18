@@ -1,19 +1,18 @@
 import random
 import json
+import threading
 
 from paho.mqtt import client as mqtt_client
-from flask import Flask
+from flask import Flask, request
 from geopy.distance import geodesic
-import threading
+
 
 broker = 'broker.emqx.io'
 port = 1883
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
 password = 'public'
-latitude = -12.240
-longitude = -38.950
-data = {}
+backup = {}
 
 
 def connect_mqtt() -> mqtt_client:
@@ -41,14 +40,14 @@ def subscribe(client: mqtt_client):
 
 def msg_decode(msg):
     topic = msg.topic.split("/")
-    result = data.get(topic[2])
+    result = backup.get(topic[2])
 
     if topic[1] == "map":
         coordinates = msg.payload.decode().split("/")
         if result == None:
             latitude = float(coordinates[0])
             longitude = float(coordinates[1])
-            data[topic[2]] = [latitude, longitude, 0]
+            backup[topic[2]] = [latitude, longitude, 0]
         else:
             result[0] = round(coordinates[0],3)
             result[1] =round(coordinates[1],3)
@@ -57,9 +56,9 @@ def msg_decode(msg):
         if result != None:
             result[2] = msg.payload.decode()
         else:
-            data[topic[2]] = [0,0, msg.payload.decode()]
+            backup[topic[2]] = [0,0, msg.payload.decode()]
     
-    print(data)
+    print(backup)
 
     
 def run():
@@ -70,15 +69,19 @@ def run():
 
 app = Flask(__name__)
 
-@app.route('/lessQueue', methods=['GET'])
+@app.route('/lessQueue', methods=['POST'])
 def less_queue():
     bestStationTime = None
+
+    data = request.get_json()
+    latitude = data['latitude']
+    longitude = data['longitude']
     coord1 = (latitude, longitude)
     km_hr = 60
     recharge = 25
     result = {}
 
-    for id, info in data.items():    
+    for id, info in backup.items():    
 
         coord2 = (info[0], info[1])
         dist = geodesic(coord1, coord2).km
