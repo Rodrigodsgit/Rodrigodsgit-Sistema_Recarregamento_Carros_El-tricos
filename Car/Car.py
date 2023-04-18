@@ -20,6 +20,9 @@ class Car:
         self.setLatitude(coordinates[0])
         self.setLongitude(coordinates[1])
 
+    def setVelocity(self, newVelocity):
+        self.velocity = newVelocity
+
     def getCoordinates(self):
         return (self.latitude, self.longitude)
 
@@ -50,7 +53,7 @@ class Car:
     def resetBattery(self):
         self.battery = 100
 
-    def isLowBattery(self) -> bool:
+    def isLowBattery(self):
         if self.battery <= 20:
             return True
         return False

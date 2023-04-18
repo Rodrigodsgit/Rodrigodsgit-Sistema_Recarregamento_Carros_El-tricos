@@ -11,6 +11,7 @@ from flask import Flask, request
 
 
 app = Flask(__name__)
+global alert
 alert = False
 car = Car(random.uniform(-12.285, -12.205), random.uniform(-38.990, -38.905))
 stations = [
@@ -18,8 +19,6 @@ stations = [
     ("localhost", 5001, (-12.245, -38.950)),
     ("localhost", 5002, (-12.245, -38.970))
 ]
-nearestStation = None
-lockNearestStation = threading.Lock()
 
 car.upBatteryConsumption()
 
@@ -36,13 +35,10 @@ def findNearestStation(car):
         if distanceKm > auxDistance:
             findStation = i
             distanceKm = auxDistance
-    global nearestStation 
-    nearestStation = findStation
+    return findStation
 
-def infoAlert():
-    lockNearestStation.acquire()
+def infoAlert(nearestStation):
     response = request.get(f'http://{nearestStation[0]}:{nearestStation[1]}/lessQueue')
-    lockNearestStation.release()
     if 200 <= response.status_code < 300:
         idStation, station = response.json().popitem()
         print(f"Bateria baixa")
@@ -53,14 +49,23 @@ def infoAlert():
 
 def avaliableBattery(car):
     while (True):
-        if car.isLowBattery(car) and not alert:
+        if car.isLowBattery() and not alert:
             alert = True
-            infoAlert(nearestStation(car))
+            infoAlert(findNearestStation(car))
         else:
             alert = False
 
 def carInMoviment(car):
-    return
+    car.setVelocity(random.randint(20, 80))
+    print(f"O carro esta a {car.velocity} km/h")
+
+    while (True):
+        destiny = [random.uniform(-12.285, -12.205), random.uniform(-38.990, -38.905)]
+        print(f"Indo para {destiny}")
+        while (car.latitude != destiny[0] and car.longitude != destiny[1]):
+            time.sleep(10)
+            car.updateLocation(1,destiny)
+            print(f"Carro esta em [{car.latitude},{car.longitude}]")
 
 def printCarBattery(car):
     while (True):
@@ -71,14 +76,17 @@ def main(car):
     printCarBatteryThread = threading.Thread(target=printCarBattery, args=(car,)) 
     consumeBetteryThread = threading.Thread(target=consumeBattery, args=(car,))
     avaliableBatteryThread = threading.Thread(target=avaliableBattery, args=(car,))
+    carInMovimentThread = threading.Thread(target=carInMoviment, args=(car,))
 
     consumeBetteryThread.start()
     avaliableBatteryThread.start()
     printCarBatteryThread.start()
+    carInMovimentThread.start()
 
     printCarBatteryThread.join()
     consumeBetteryThread.join()
     avaliableBatteryThread.join()
+    carInMovimentThread.join()
     return
 
 if __name__ == '__main__':
