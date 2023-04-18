@@ -1,4 +1,5 @@
-
+from geopy.distance import geodesic
+from geopy import Point
 
 class Car:
     battery = 100
@@ -53,6 +54,15 @@ class Car:
         if self.battery <= 20:
             return True
         return False
+    
+    def updateLocation(self, travelledDistance : float, destiny : tuple):
+        destinyPoint = Point(destiny[0], destiny[1])
+        carPoint = Point(self.latitude, self.longitude)
+        distaceToDestiny = geodesic(carPoint, destinyPoint).km
+        if distaceToDestiny > travelledDistance:
+            self.latitude, self.longitude = carPoint.destination(point=destinyPoint, distance=travelledDistance*1000).to_tuple()
+        else:
+            self.latitude, self.longitude = destiny
 
     
 def printCar(car):
