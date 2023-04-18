@@ -59,6 +59,9 @@ def avaliableBattery(car):
         else:
             alert = False
 
+def carInMoviment(car):
+    return
+
 def printCarBattery(car):
     while (True):
         time.sleep(10)
