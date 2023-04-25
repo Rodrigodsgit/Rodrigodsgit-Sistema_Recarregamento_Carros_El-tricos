@@ -43,8 +43,8 @@ def publish(client, coordinates):
 
 def menu():
     while True:
-        latitude = float(-12.220)  #Decimal(input("Enter your latitude coordinate: "))  
-        longitude = float(-38.930)  #Decimal(input("Enter your longi80tude coordinate: "))
+        latitude = float((input("Enter your latitude coordinate: ")))
+        longitude = float((input("Enter your longi80tude coordinate: ")))
         if (-12.205 >= latitude >= -12.285) and (-38.905 >= longitude >= -38.990):
             print("Established geographical area")
             return f"{latitude}/{longitude}"

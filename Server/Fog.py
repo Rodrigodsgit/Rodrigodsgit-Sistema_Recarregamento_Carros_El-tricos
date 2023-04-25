@@ -100,9 +100,21 @@ def less_queue():
     result = json.dumps(result)
     return result
 
+@app.route('/stations' , methods=['GET'])
+def stations():
+    listStation = {}
+    listStation['stations'] = list(backup.keys())
+    result = json.dumps(listStation)
+    return result
+
+@app.route('/allData', methods=['GET'])
+def allData():
+    result = json.dumps(backup)
+    return result
 if __name__ == '__main__':
+    door = int(input("Enter the fog port: "))
     t1 = threading.Thread(target=run)
-    t2 = threading.Thread(target=app.run)
+    t2 = threading.Thread(target=app.run, kwargs={'port': door})
 
     t1.start()
     t2.start()
