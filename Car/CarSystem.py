@@ -6,7 +6,8 @@ import time
 from Car import Car
 
 from geopy.distance import geodesic
-from flask import Flask, request
+from flask import Flask
+import requests
 
 
 
@@ -16,8 +17,8 @@ alert = False
 car = Car(random.uniform(-12.285, -12.205), random.uniform(-38.990, -38.905))
 stations = [
     ("localhost", 5000, (-12.240, -38.950)),
-    ("localhost", 5001, (-12.245, -38.950)),
-    ("localhost", 5002, (-12.245, -38.970))
+    ("localhost", 5000, (-12.245, -38.950)),
+    ("localhost", 5000, (-12.245, -38.970))
 ]
 
 car.upBatteryConsumption()
@@ -37,8 +38,13 @@ def findNearestStation(car):
             distanceKm = auxDistance
     return findStation
 
-def infoAlert(nearestStation):
-    response = request.get(f'http://{nearestStation[0]}:{nearestStation[1]}/lessQueue')
+def infoAlert(nearestStation, car):
+    carCoordinates = car.getCoordinates()
+    dataJson = {"latitude": carCoordinates[0], "longitude": carCoordinates[1]}
+    headers = {'Content-Type': 'application/json'}
+    print(dataJson)
+    url = f'http://{nearestStation[0]}:{nearestStation[1]}/lessQueue'
+    response = requests.post(url, headers=headers, json=dataJson)
     if 200 <= response.status_code < 300:
         idStation, station = response.json().popitem()
         print(f"Bateria baixa")
@@ -51,8 +57,8 @@ def avaliableBattery(car):
     while (True):
         if car.isLowBattery() and not alert:
             alert = True
-            infoAlert(findNearestStation(car))
-        else:
+            infoAlert(findNearestStation(car), car)
+        elif not car.isLowBattery():
             alert = False
 
 def carInMoviment(car):
@@ -73,6 +79,7 @@ def printCarBattery(car):
         print(f"Baterria em {car.battery}%")
 
 def main(car):
+
     printCarBatteryThread = threading.Thread(target=printCarBattery, args=(car,)) 
     consumeBetteryThread = threading.Thread(target=consumeBattery, args=(car,))
     avaliableBatteryThread = threading.Thread(target=avaliableBattery, args=(car,))
