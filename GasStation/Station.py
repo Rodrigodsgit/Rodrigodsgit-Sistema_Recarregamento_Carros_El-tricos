@@ -6,7 +6,7 @@ from paho.mqtt import client as mqtt_client
 
 
 
-broker = 'localhost'
+broker = '172.16.103.7'
 port = 1883
 client_id = f'station-{random.randint(0, 1000)}'
 username = 'emqx'
