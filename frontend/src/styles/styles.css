@@ -1,0 +1,10 @@
+.Main{
+    display: flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items: center;
+}
+
+.Header{
+   padding-bottom: 40px  
+}

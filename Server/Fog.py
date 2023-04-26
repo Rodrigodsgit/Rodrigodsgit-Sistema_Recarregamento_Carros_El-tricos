@@ -7,7 +7,7 @@ from flask import Flask, request
 from geopy.distance import geodesic
 
 
-broker = 'broker.emqx.io'
+broker = 'localhost'
 port = 1883
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
@@ -112,11 +112,11 @@ def allData():
     result = json.dumps(backup)
     return result
 if __name__ == '__main__':
-    door = int(input("Enter the fog port: "))
     t1 = threading.Thread(target=run)
-    t2 = threading.Thread(target=app.run, kwargs={'port': door})
-
     t1.start()
+
+    door = int(input("Enter the fog port: "))
+    t2 = threading.Thread(target=app.run, kwargs={'port': door})
     t2.start()
 
     t1.join()
