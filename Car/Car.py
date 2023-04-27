@@ -46,7 +46,7 @@ class Car:
             self.batteryConsumption += 1
 
     def consumeBattery(self):
-        self.battery -= 5 * self.batteryConsumption
+        self.battery -= 20 * self.batteryConsumption
         if self.battery < 0:
             self.battery = 0
 
