@@ -7,7 +7,7 @@ from flask import Flask, request
 from geopy.distance import geodesic
 
 
-broker = 'localhost'
+broker = '172.16.103.7'
 port = 1883
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
