@@ -76,7 +76,7 @@ def carInMoviment(car):
 def printCarBattery(car):
     while (True):
         time.sleep(10)
-        print(f"Baterria em {car.battery}%")
+        print(f"Bateria em {car.battery}%")
 
 def main(car):
 
