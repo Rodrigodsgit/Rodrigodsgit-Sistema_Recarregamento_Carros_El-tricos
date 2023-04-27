@@ -79,11 +79,12 @@ class Car:
     
 def printCar(car):
     print("-" * 20)
-    print(f"Bateria: {testCar.battery}")
-    print(f"Consumo: {testCar.getBatteryConsumption()} - {testCar.batteryConsumption}")
-    print(f"Coordenadas: Lat - {testCar.latitude} | Lon - {testCar.longitude}")
+    print(f"Bateria: {car.battery}")
+    print(f"Consumo: {car.getBatteryConsumption()} - {car.batteryConsumption}")
+    print(f"Coordenadas: Lat - {car.latitude} | Lon - {car.longitude}")
 
 if __name__ == '__main__':
     testCar = Car(10,10)
+    printCar(testCar)
 
 
