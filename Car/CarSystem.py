@@ -56,6 +56,7 @@ def infoAlert(nearestStation, car):
         print(f"tem {station[2]} carros nesse posto com um tempo gasto de {station[0]}")
     else:
         print(f"Erro {response.status_code} ao se conectar ao servidor {nearestStation[0]}:{nearestStation[1]}")
+    car.resetBattery()
 
 def avaliableBattery(car):
     while (True):
