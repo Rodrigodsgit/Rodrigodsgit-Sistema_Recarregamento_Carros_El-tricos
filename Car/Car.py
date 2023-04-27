@@ -61,12 +61,20 @@ class Car:
     def updateLocation(self, travelHours : float, destiny : tuple):
         destinyPoint = Point(destiny[0], destiny[1])
         carPoint = Point(self.latitude, self.longitude)
+
+        latDistancy = carPoint.latitude - destinyPoint.latitude
+        lonDistancy = carPoint.longitude - destinyPoint.longitude
+
         distaceToDestiny = geodesic(carPoint, destinyPoint).km
-        travelledDistance = self.velocity * travelHours
-        if distaceToDestiny > travelledDistance:
-            self.latitude, self.longitude = carPoint.destination(point=destinyPoint, distance=travelledDistance*1000).to_tuple()
-        else:
+        timeToDestiny = distaceToDestiny / self.velocity
+
+        newLat = carPoint.latitude - (latDistancy * travelHours) / timeToDestiny
+        newLon = carPoint.longitude - (lonDistancy * travelHours) / timeToDestiny
+
+        if (geodesic(carPoint, (newLat, newLon)).km > distaceToDestiny):
             self.latitude, self.longitude = destiny
+        else:
+            self.latitude, self.longitude = newLat, newLon
 
     
 def printCar(car):
