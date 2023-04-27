@@ -4,6 +4,7 @@ import threading
 
 from paho.mqtt import client as mqtt_client
 from flask import Flask, request
+from flask_cors import CORS
 from geopy.distance import geodesic
 
 
@@ -68,6 +69,7 @@ def run():
 
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/lessQueue', methods=['POST'])
 def less_queue():
@@ -91,10 +93,10 @@ def less_queue():
         totalTime = timeDist + timeRecharge
 
         if bestStationTime == None:
-            bestStationTime = [id, totalTime, dist, info[2]]
+            bestStationTime = [id, totalTime, dist, info[2],info[0], info[1]]
         else:
             if bestStationTime[1] > totalTime:
-                bestStationTime = [id, totalTime, dist, info[2]]
+                bestStationTime = [id, totalTime, dist, info[2],info[0], info[1]]
         
     result[bestStationTime[0]] = bestStationTime[1:]
     result = json.dumps(result)
@@ -107,10 +109,18 @@ def stations():
     result = json.dumps(listStation)
     return result
 
+@app.route('/positions', methods=['GET'])
+def positions():
+    listPositions = []
+    for value in backup.values():
+        listPositions.append((value[0],value[1]))
+    return listPositions
+
 @app.route('/allData', methods=['GET'])
 def allData():
     result = json.dumps(backup)
     return result
+
 if __name__ == '__main__':
     t1 = threading.Thread(target=run)
     t1.start()

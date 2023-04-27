@@ -1,10 +1,19 @@
+body{
+    background-color: #000000;
+    background-image: url('../assets/Topography.svg');
+}
+
 .Main{
     display: flex;
     flex-direction:column;
     justify-content:center;
-    align-items: center;
+    align-items: center;   
 }
 
 .Header{
-   padding-bottom: 40px  
+   padding-bottom: 40px  ;
+   padding-top: 20px;
+   color: white;
+   font-size: 25px;
+   font-weight: bold;
 }
