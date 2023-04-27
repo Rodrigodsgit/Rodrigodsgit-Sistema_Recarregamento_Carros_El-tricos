@@ -16,9 +16,9 @@ global alert
 alert = False
 car = Car(random.uniform(-12.285, -12.205), random.uniform(-38.990, -38.905))
 stations = [
-    ("172.16.103.7", 5000, (-12.240, -38.950)),
-    ("172.16.103.7", 5001, (-12.265, -38.950)),
-    ("172.16.103.7", 5002, (-12.253, -38.972))
+    ("172.16.103.7", 5001, (-12.240, -38.950)),
+    ("172.16.103.7", 5002, (-12.265, -38.950)),
+    ("172.16.103.7", 5003, (-12.253, -38.972))
 ]
 
 car.upBatteryConsumption()
@@ -70,7 +70,7 @@ def carInMoviment(car):
         print(f"Indo para {destiny}")
         while (car.latitude != destiny[0] and car.longitude != destiny[1]):
             time.sleep(10)
-            car.updateLocation(1,destiny)
+            car.updateLocation(0.01,destiny)
             print(f"Carro esta em [{car.latitude},{car.longitude}]")
 
 def printCarBattery(car):
