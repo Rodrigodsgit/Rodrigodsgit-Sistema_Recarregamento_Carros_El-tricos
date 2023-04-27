@@ -116,7 +116,7 @@ if __name__ == '__main__':
     t1.start()
 
     door = int(input("Enter the fog port: "))
-    t2 = threading.Thread(target=app.run, kwargs={'port': door})
+    t2 = threading.Thread(target=app.run, kwargs={'host':'0.0.0.0','port': door})
     t2.start()
 
     t1.join()
