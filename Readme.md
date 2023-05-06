@@ -238,6 +238,21 @@ O componente utiliza a biblioteca useRef para armazenar uma referência ao marca
 
 O componente Interface é exportado como um módulo para ser utilizado em outros componentes do frontend.
 
+<div id="mapa1" style="display: inline_block" align="center">
+		<img src="assets/mapa1.png"/>
+		Mapa com um posto (verde) o carro utilizando a interface (vermelho) e as 3 nevoas (azul).
+</div>
+ 
+<div id="mapa1" style="display: inline_block" align="center">
+		<img src="assets/mapa2.png"/>
+		Mapa com o carro indo abastecer no posto.
+</div>
+
+<div id="mapa1" style="display: inline_block" align="center">
+		<img src="assets/mapa3.png"/>
+		Mapa com vários postos.
+</div>
+
 </div>
 
 <div id="docker">

@@ -8,7 +8,7 @@ from flask_cors import CORS
 from geopy.distance import geodesic
 
 
-broker = '172.16.103.7'
+broker = 'localhost'
 port = 1883
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'

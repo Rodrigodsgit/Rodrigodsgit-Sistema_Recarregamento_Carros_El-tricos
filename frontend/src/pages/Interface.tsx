@@ -52,7 +52,7 @@ export function Interface() {
     try {
       axios({
         method: 'get',
-        url: `http://172.16.103.4:5001/positions`,
+        url: `http://127.0.0.1:5001/positions`,
         }).then(function (response){
           if (response.data){
               setData(response.data)
@@ -77,7 +77,7 @@ export function Interface() {
     try { 
       axios({
         method: 'post',
-        url: `http://172.16.103.4:5001/lessQueue`,
+        url: `http://127.0.0.1:5001/lessQueue`,
         data:{
           latitude: coords[0],
           longitude: coords[1]
