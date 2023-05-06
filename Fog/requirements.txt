@@ -1,3 +1,4 @@
 paho.mqtt
 flask 
 geopy
+flask_cors
