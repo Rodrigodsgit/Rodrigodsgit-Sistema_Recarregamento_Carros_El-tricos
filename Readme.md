@@ -62,6 +62,7 @@ Essa arquitetura de microsserviços permite que cada componente do sistema seja 
     <li><a href="#station">GasStation</a></li>
     <li><a href="#fog">Fog</a></li>
     <li><a href="#server">Server</a></li>
+	<li><a href="#front">Frontend</a></li>
 </lu>
 </div>
 
@@ -165,6 +166,7 @@ Em resumo, o código Fog.py implementa uma arquitetura de computação em nevoei
 <div id ="server">
 
 # Server ☁
+
 O Server é um arquivo Dockerfile que tem como objetivo criar um container com a imagem do Mosquitto, um broker MQTT de código aberto. Ele é responsável por gerenciar as conexões entre os dispositivos IoT, como as estações de recarga e os carros elétricos, permitindo que eles troquem informações em tempo real.
 
 ## Funcionalidades 🚀
@@ -190,6 +192,52 @@ O arquivo Dockerfile contém as instruções para criar um container com a image
 Ao executar o comando docker build, o Docker cria a imagem do Mosquitto, contendo todas as configurações necessárias. Ao executar o comando docker run, é criado um container a partir da imagem previamente criada. Esse container é executado em segundo plano, mantendo o broker MQTT ativo e aguardando conexões entre os dispositivos IoT.
 
 Assim, o Server se torna essencial para o funcionamento da arquitetura do sistema, permitindo que os dispositivos IoT possam se conectar e trocar informações em tempo real através do broker MQTT.
+</div>
+
+<div id="front">
+
+# Frontend 👨‍💻
+
+A Interface é o componente principal do frontend, que apresenta um mapa com marcadores de pontos e um marcador móvel que representa o veículo. A funcionalidade do frontend aqui apresentada não foi solicitada, mas foi adicionada para uma melhor visualização do sistema de localização de scooters. Como essa funcionalidade foi adicionada ao projeto após a definição dos requisitos, ela não foi implementada da forma mais otimizada e pode conter algumas limitações.
+
+O frontend do sistema de localização de scooters é uma aplicação web desenvolvida em React com TypeScript. Ele é responsável por mostrar no mapa a localização atual das scooters e o estado da bateria de cada uma delas.
+
+O mapa utilizado é fornecido pelo OpenStreetMap e é renderizado utilizando a biblioteca Leaflet. O frontend consome os dados do servidor por meio de requisições HTTP utilizando a biblioteca Axios.
+
+O código do frontend foi desenvolvido com o objetivo de fornecer uma interface amigável e intuitiva para o usuário final. No entanto, devido às limitações de tempo, ele não foi implementado da forma mais otimizada e pode conter algumas limitações.
+
+## Funcionalidades 🚀
+
+- Renderização de um mapa com a biblioteca Leaflet
+- Atualização da localização do marcador móvel com base em dados recebidos do servidor
+- Atualização dos marcadores de pontos com base em dados recebidos do servidor
+- Verificação do nível de bateria e troca da estação de recarga, quando necessário.
+
+## Bibliotecas utilizadas 📚
+
+- React
+- Leaflet
+- Axios
+
+## Como executar 🛠️
+
+Para executar o frontend, é necessário ter o Node.js instalado na máquina.
+
+1. Acesse a pasta do frontend no terminal.
+2. Execute o comando npm install para instalar as dependências.
+3. Execute o comando npm run dev para iniciar o servidor local.
+4. Acesse a URL http://localhost:5173/ no navegador para visualizar o frontend.
+
+## Como funciona 📝
+
+O componente Interface utiliza a biblioteca Leaflet para renderizar um mapa e adicionar marcadores de pontos e um marcador móvel que representa o veículo. O estado data é inicializado como um array vazio que é atualizado através de uma requisição HTTP utilizando a biblioteca Axios. Os marcadores de pontos são adicionados ao mapa através do useEffect, que é disparado sempre que o estado data é atualizado.
+
+A localização do marcador móvel é definida pelo estado coords, que é atualizado a cada 3 segundos através de um intervalo definido pelo setInterval. O nível de bateria é definido pelo estado batery e atualizado pela função baterylow, que é executada no intervalo definido pelo setInterval. Quando o nível de bateria atinge um valor abaixo de 50%, a função getStation é chamada para encontrar a estação de recarga mais próxima e atualizar a posição do marcador móvel. Isso é feito através de uma requisição HTTP utilizando a biblioteca Axios.
+
+O componente utiliza a biblioteca useRef para armazenar uma referência ao marcador móvel, e o useEffect é utilizado para atualizar a posição do marcador móvel sempre que o estado coords é atualizado.
+
+O componente Interface é exportado como um módulo para ser utilizado em outros componentes do frontend.
+
 </div>
 
 <div id="docker">
@@ -231,14 +279,16 @@ Com esses comandos, é possível gerar e executar as imagens das aplicações em
 
 # Conclusão 🏁
 
-Com base no projeto desenvolvido, foi possível implementar um sistema de medição de energia elétrica em Python. O projeto foi dividido em duas partes principais: o backend e o frontend. No backend, foi implementado um servidor que recebe os dados de consumo de energia elétrica enviados pelos clientes. Foi utilizado o protocolo TCP/IP para a comunicação entre os clientes e o servidor, e a biblioteca Socket do Python foi utilizada para implementar o servidor.
 
-No frontend, foi desenvolvido um cliente que envia os dados de consumo de energia elétrica para o servidor. O cliente foi implementado utilizando a biblioteca Socket do Python para criar e configurar o socket de rede, a biblioteca JSON para serializar os dados em formato JSON, a biblioteca Datetime para gerar a data e hora atuais, e a biblioteca Threading para executar o envio de dados e a configuração de taxa de consumo em threads separadas. O cliente permite ao usuário configurar a taxa de consumo de energia elétrica e enviar os dados para o servidor.
+Neste projeto, desenvolvemos uma solução para monitoramento de baterias de veículos elétricos utilizando a tecnologia de Internet das Coisas (IoT). Para isso, utilizamos o protocolo MQTT para a comunicação entre os dispositivos e o broker, além do Docker para garantir a portabilidade e escalabilidade da solução.
 
-Além disso, foi desenvolvido um frontend em React, Tailwind CSS e Typescript, utilizando as bibliotecas Radix UI e Material UI para os componentes de interface do usuário. O frontend possui três principais páginas: a página de login, a página de histórico e a página de fatura. Na página de login, o usuário insere seu ID de cadastro válido e é redirecionado para a página de histórico, que mostra o histórico de consumo atual e gráficos relacionados a ele. Nessa página, o usuário pode ir para a página de fatura, que mostra o valor atual da fatura e algumas informações juntamente com o QRCode da fatura.
+Na parte do backend, desenvolvemos uma API RESTful em Python utilizando o framework Flask para receber as informações enviadas pelos dispositivos e armazená-las em um banco de dados MongoDB. Utilizamos também o serviço de cloud da Amazon Web Services (AWS) para hospedar a aplicação em uma instância EC2.
 
-O projeto foi um sucesso, e todas as funcionalidades propostas foram implementadas com sucesso. A entrega do projeto foi feita dentro do prazo estipulado e com alta qualidade. O resultado final foi um sistema de medição de energia elétrica robusto e funcional, que atende às necessidades dos usuários de forma eficiente e fácil de usar.
+Na parte do frontend, implementamos uma interface gráfica em React com TypeScript para visualizar a localização dos veículos e o nível de bateria em tempo real. Adicionamos a biblioteca Leaflet para a criação do mapa e a biblioteca axios para realizar as requisições HTTP à API.
 
+Apesar de ter atendido aos requisitos iniciais do projeto, a funcionalidade de frontend não foi solicitada e foi adicionada posteriormente para melhor visualização do sistema. Por isso, não foi implementada de forma otimizada e pode ser aprimorada em futuras versões.
+
+Em resumo, este projeto apresenta uma solução funcional para monitoramento de baterias de veículos elétricos utilizando IoT e MQTT, com um backend em Python e um frontend em React. A utilização de tecnologias como Docker e AWS garante a escalabilidade e portabilidade da solução, permitindo que ela seja facilmente adaptada a diferentes cenários e necessidades.
 </div>
 
 </div>
