@@ -1,18 +1,7 @@
-<div id="image03" style="display: inline_block" align="center">
-		<img src="assets/logo.png"/>
-</div>
 
-<div style="display: inline_block" align="center">
-<a href="#en"> English </a> |
-<a href="#pt"> Portuguese  </a> 
-</div>
 
 <br>
 
-<div id="en">
-
-
-</div>
 
 <div id="pt">
 
