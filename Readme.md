@@ -32,6 +32,11 @@ Para garantir o desempenho da aplicação, sua equipe adotou uma infraestrutura 
 
 # Conceitos & Metodologia 📚
 
+<div id="diagrama" style="display: inline_block" align="center">
+		<img src="assets/Diagrama Geral.jpg"/>
+		Diagrama Geral.
+</div>
+	
 O sistema foi desenvolvido seguindo uma arquitetura de microsserviços, onde cada componente é responsável por uma funcionalidade específica. A aplicação é dividida em quatro partes principais: o servidor, o GasStation, a Fog e o Car.
 
 O servidor é a peça central do sistema e é responsável por gerenciar as conexões entre os componentes e o fluxo de dados entre eles. Para isso, foi utilizado uma imagem docker que inicializa um broker Mosquitto para comunicação MQTT.
@@ -48,6 +53,7 @@ Essa arquitetura de microsserviços permite que cada componente do sistema seja 
 
 <lu>
     <li><a href="#car">Car</a></li>
+    <li><a href="#carsystem">CarSystem</a></li>
     <li><a href="#station">GasStation</a></li>
     <li><a href="#fog">Fog</a></li>
     <li><a href="#server">Server</a></li>
@@ -59,11 +65,107 @@ Essa arquitetura de microsserviços permite que cada componente do sistema seja 
 
 <div id="car">  
   
-# Car 📱
+# Car 🚗
 
+Este é um arquivo de uma classe em Python que representa o carro. Esta classe serve para simular qualquer periférico que o carro tenha para que o sistema funcione como: Um voltímetro de bateria, um velocímetro e um geolocalizador. 
 
+## Funcionalidades 🚀
+
+Essa classe tem as seguintes funcionalidades:
+
+- Simular valores vindo de um velocímetro e de um geolocalizador
+	
+- Simular o consumo da bateria do carro podendo definir a seu grau de consumo
+	
+## Bibliotecas utilizadas 📚
+	
+- `geopy`: Utilização e operações com pontos em latitude e longitude
+
+## Como executar 🛠️
+
+1. Tenha o Python instalado com a biblioteca geopy, que pode ser instalada com o pip pelo comando:
+```console
+pip install geopy
+```
+2. Execute o arquivo Car.py através do terminal com o comando:
+```console
+python Station.py
+```
+A execução desse arquivo tem apenas o propósito de testes isolados na classe ja que sua utilização é feita pelo arquivo CarSystem.py.
+	
+## Como funciona 📝
+	
+Essa classe representa o sistema do carro que é utilizado pelo nosso sistema, sintetizando eles em atributos e métodos. A classe contém como atributo:
+- battery: Que representa a porcentagem de bateria do carro, sempre iniciando em 100%;
+- batteryConsumption: Um valor entre 0 a 3 que representa o quanto de bateria o carro está gastando;
+- latitude e longitude: Representam as coordenadas do carro atualmente.
+
+O car.py também é composto por vários métodos. Além dos padrões métodos "Set's" e "Get's" temos métodos para controlar as simulação mais simples que a classe pretende ter, como:
+- lowerBatteryConsumption(): Método que reduz o consumo de energia até no mínimo de 0;
+- upBatteryConsumption(): Método que aumenta o consumo de energia até o máximo de 3;
+- consumeBattery(): Reduz a bateria em 20% vezes o valor do consumo de energia;
+- resetBattery(): Restaura o valor inicial da bateria;
+- isLowBattery(): Avalia se a bateria igual ou inferior a 20%, caso verdadeiro informa que a bateria está baixa.
+
+A classe ainda tem um último método que é o updateLocation que é mais complicado que os outros. Esse método tem como objetivo atualizar a localização do carro baseado no destino que ele pretende chegar, a sua velocidade atual e o tempo que ele vai andar. O cálculo da nova coordenada é feito calculando o inicialmente o tempo que o carro deve demorar para completar o seu destino, depois analisa quantos porcento desse destino ele irá andar com o tempo dado. Se a o tempo dado for menor que o tempo até o destino e calcular as coordenadas por uma regra de três, sado contrário a coordenada vai ser o destino.
+	
 </div>
 
+<div id="carsystem">
+
+<div id="carsystem">
+
+# CarSystem 📱
+
+Esse arquivo Python que instancia um objeto da classe Car e cria um controlador para o mesmo fazendo a integração do veículo com o nosso sistema avaliando a bateria do carro, atualizando a sua posição e quando necessário requisitando ao servidor o melhor posto para recarga via API REST.
+	
+## Funcionalidades 🚀
+
+Esse controlador tem as seguintes funcionalidades:
+	
+- Controlar o consumo de bateria do seu Car;
+- Avaliar o nível da bateria;
+- Requisitar o melhor posto para recarga de bateria quando a mesma estiver baixa;
+- Simular o movimento do carro.
+	
+## Bibliotecas utilizadas 📚
+
+- `geopy.distance`: biblioteca para calcular a distância geográfica entre dois pontos;
+- `requests`: biblioteca fazer requisições HTTP para uma API.
+	
+## Como executar 🛠️
+	
+1. É necessário ter o Python e a biblioteca requests e geopy.distance instalados na máquina, podendo ambos serem instaladas com o pip da seguinte forma:
+	
+```console
+pip install requests
+pip install geopy
+```
+
+2. Execute o arquivo CarSystem.py através do terminal com o comando:
+	
+```console
+python CarSystem.py
+```	
+	
+3. O arquivo vai criar um objeto Car informando seus dados iniciais e suas alterações, além de poder aumentar ou diminuir o consumo da bateria manualmente direto pelo terminal.
+	
+## Como funciona 📝
+	
+O Arquivo CarSystem é um módulo do sistema que instancia e controla um carro na rede. Ele é responsável por acompanhar a situação atual do carro para, quando necessário, solicitar ao servidor mais próximo o melhor posto para recarga. Para monitorar o carro dessa forma ela utiliza-se de alguns métodos para esse controle, os quais são executados em threads diferentes para que o monitoramento não seja dependente de outras funcionalidades.
+	
+Ao ser executado o CarSystem demonstra os dados iniciais do carro e depois informa o caminhar da bateria. Inicialmente ele mostra no terminal a velocidade do carro, seu consumo inicial de bateria e sua posição inicial, a medida que passa o tempo ele vai informando a bateria atual do carro a cada 10 segundos.
+	
+O monitoramento da bateria ocorre através da thread avaliableBatteryThread que executa o método avaliableBattery. Ao ser executado o  CarSystem começa a perguntar para o seu Car se a bateria está baixa e, caso esteja, solicita ao servidor qual posto mais próximo para a recarga. Com o recebimento correto do posto, é informado pelo terminal qual o posto encontrado, sua localização e o tamanho atual de sua fila e pausa a sua verificação da bateria até ela sair do nível baixo.
+
+Como o sistema é um protótipo o CarSystem faz outras atividades para a simulação ocorrer da melhor forma. O módulo controla algumas modificações dos estados do carro em threads diferentes para não influenciar no próprio monitoramento. As modificações que ele proporciona e no deslocamento do carro, o consumo de bateria e o quanto de bateria o carro vai consumir.
+
+Para o deslocamento do carro, o CarSystem cria uma thread para executar o método carInMoviment. O método é um loop que aleatoriza um destino para o Car dentro de uma região predeterminada e pede para ele se movimentar para esse destino por 6 min usando o método updateLocation e, assim que o carro chegue nesse ponto, ele cria um novo destino.
+	
+O controle da bateria e seu consumo ocorre em duas threads. Para criar o gasto de bateria é criada a thread consumeBetteryThread que usando o método consumeBattery do seu Car para consumir a bateria a cada 5 segundos. Já o controle do consumo é feito pela thread batteryConsumptionThead que informa que para aumentar ou diminuir o consumo de bateria o usuário deve digitar + ou - respectivamente para assim modificar o consumo de bateria.
+
+</div>
+	
 <div id="station">
 
 # Gas Station ⛽
