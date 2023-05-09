@@ -43,6 +43,11 @@ Para garantir o desempenho da aplicação, sua equipe adotou uma infraestrutura 
 
 # Conceitos & Metodologia 📚
 
+<div id="diagrama" style="display: inline_block" align="center">
+		<img src="assets/Diagrama Geral.jpg"/>
+		Diagrama Geral.
+</div>
+	
 O sistema foi desenvolvido seguindo uma arquitetura de microsserviços, onde cada componente é responsável por uma funcionalidade específica. A aplicação é dividida em quatro partes principais: o servidor, o GasStation, a Fog e o Car.
 
 O servidor é a peça central do sistema e é responsável por gerenciar as conexões entre os componentes e o fluxo de dados entre eles. Para isso, foi utilizado uma imagem docker que inicializa um broker Mosquitto para comunicação MQTT.
